@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import * as actions from "../store/actions";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import CardHeaderRaw from "@material-ui/core/CardHeader";
-import AvatarRaw from "@material-ui/core/Avatar";
 import { withStyles } from "@material-ui/core/styles";
 import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import Card from "@material-ui/core/Card";
@@ -73,16 +72,6 @@ const cardStyles = theme => ({
 });
 
 const CardHeader = withStyles(cardStyles)(CardHeaderRaw);
-
-const avatarStyles = theme => ({
-  root: {
-    background: theme.palette.primary.main
-  },
-  title: {
-    color: "white"
-  }
-});
-const Avatar = withStyles(avatarStyles)(AvatarRaw);
 
 const styles = {
   card: {
