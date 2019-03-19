@@ -1,10 +1,10 @@
 ## John Rodney's EOG Visualization
 
-#install
+###install
 `git clone https://github.com/JohnRodney/eog-visualization`
 `yarn install`
 
-#run
+###run
 
 `yarn start`
 
