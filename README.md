@@ -1,7 +1,7 @@
 ## John Rodney's EOG Visualization
 
 # install
-`git clone https://github.com/JohnRodney/eog-visualization && cd eog-visualization && yarn install`\
+`git clone https://github.com/JohnRodney/eog-visualization && cd eog-visualization && yarn install`
 
 # run
 `yarn start`
