@@ -1,3 +1,11 @@
-## Create React App Visualization
+## John Rodney's EOG Visualization
 
-Read more about this assessment here
+#install
+`git clone https://github.com/JohnRodney/eog-visualization`
+`yarn install`
+
+#run
+
+`yarn start`
+
+You should be automatically directed in your default browser
