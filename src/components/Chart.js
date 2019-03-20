@@ -7,43 +7,13 @@ import { withStyles } from "@material-ui/core/styles";
 import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import moment from 'moment';
-
-const pollInterval = 5000;
-
-const transformData = (data) => {
-  return data.map(entry => {
-    const transformedEntry = entry;
-    transformedEntry.time = moment(entry.timestamp).format('hh:mm:ss A');
-    return transformedEntry;
-  });
-}
-
-const getDomainFromData = (data) => {
-  const padding = 10;
-  let min = 1000000;
-  let max = 0;
-  data.forEach(entry => {
-    const { metric } = entry;
-    if (metric > max) {
-      max = metric;
-    }
-    if (metric < min) {
-      min = metric;
-    }
-  });
-
-  min = Math.floor(min - padding);
-  max = Math.ceil(max + padding);
-
-  return {
-    min,
-    max,
-  }
-}
+import Thermometer from 'react-thermometer-component';
+import pollInterval from '../constants/interval';
+import transformData from '../utilities/transform-data';
+import getDomainFromData from '../utilities/get-domain';
 
 const renderLineChart = (data, width, yDomain) => (
-  <LineChart width={width * .9} height={150} data={transformData(data)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+  <LineChart width={width * .7} height={300} data={transformData(data)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
     <Line type="monotone" dataKey="metric" stroke="#8884d8" />
     <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
     <XAxis dataKey="time" />
@@ -53,7 +23,7 @@ const renderLineChart = (data, width, yDomain) => (
 );
 
 const renderBarChart = (data, width, yDomain) => (
-  <BarChart width={width * .9} height={150} data={transformData(data)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+  <BarChart width={width * .9} height={200} data={transformData(data)} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
     <Bar type="monotone" dataKey="metric" stroke="#8884d8" />
     <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
     <XAxis dataKey="time" />
@@ -75,7 +45,18 @@ const CardHeader = withStyles(cardStyles)(CardHeaderRaw);
 
 const styles = {
   card: {
-    margin: "20px 10px"
+    margin: "20px 10px",
+  },
+  cardSplit: {
+    margin: "20px 10px",
+    display: 'inline-block',
+    width: "calc(80% - 40px)"
+  },
+  thermometer: {
+    textAlign: 'center',
+    margin: "20px 10px",
+    display: 'inline-block',
+    width: "20%"
   }
 };
 
@@ -103,11 +84,27 @@ class Chart extends Component {
 
     if (loading) return <LinearProgress />;
 
-    setTimeout(this.props.update, pollInterval);
-
+    setTimeout(this.props.onLoad, pollInterval);
+    console.log(data)
     return (
       <div>
-        <Card className={classes.card}>
+        <Card className={classes.thermometer}>
+          <CardHeader title="Reactive Thermometer" />
+          <CardContent>
+            <Thermometer
+              style={{ marginLeft: '400px' }}
+              theme="light"
+              value={data.length > 0 ? Math.floor(data[data.length-1].metric) : 0}
+              max="400"
+              steps="3"
+              format="°C"
+              size="large"
+              height="300"
+            />
+          </CardContent>
+        </Card>
+
+        <Card className={classes.cardSplit}>
           <CardHeader title="Reactive Line Chart" />
           <CardContent>
             { renderLineChart(data, window.innerWidth, getDomainFromData(data)) }
@@ -139,10 +136,6 @@ const mapState = (state, ownProps) => {
 
 const mapDispatch = dispatch => ({
   onLoad: () =>
-    dispatch({
-      type: actions.FETCH_DRONE,
-    }),
-  update: () =>
     dispatch({
       type: actions.FETCH_DRONE,
     })
